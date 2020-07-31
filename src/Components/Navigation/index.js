@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { AppBar, Toolbar, Typography, IconButton, Drawer, List,
 Divider, ListItem, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem,
 SwipeableDrawer } from '@material-ui/core';
-import { Menu as MenuIcon, AccountCircle, Home as HomeIcon, FitnessCenter as FitnessCenterIcon, Event as EventIcon  } from '@material-ui/icons';
+import { Menu as MenuIcon, AccountCircle, Home as HomeIcon } from '@material-ui/icons';
 
 import * as VALUES from '../../Constants/values';
 import * as ROUTES from '../../Constants/routes';

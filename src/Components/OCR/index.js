@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createWorker} from 'tesseract.js';
-import { Container, Button, Typography, Box } from '@material-ui/core';
+import { Container, Button, Typography, Box  } from '@material-ui/core';
 
 const worker = createWorker();
 
