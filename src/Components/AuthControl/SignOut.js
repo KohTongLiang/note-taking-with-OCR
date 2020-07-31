@@ -1,12 +1,13 @@
 import React from 'react';
  
-import Button from 'react-bootstrap/Button';
+import {Button} from '@material-ui/core';
 import { withFirebase } from '../Firebase';
 
 const SignOutButton = ({ firebase }) => (
-  <Button variant="link" type="button" onClick={firebase.doSignOut}>
+  <Button onClick={firebase.doSignOut}>
     Sign Out
   </Button>
+
 );
  
 export default withFirebase(SignOutButton);

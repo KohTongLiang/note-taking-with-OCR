@@ -1,14 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { DialogContent, Typography, Dialog, AppBar, Toolbar, IconButton,
-    FormGroup, FormControl, InputLabel, Input, BottomNavigation, BottomNavigationAction, DialogActions } from '@material-ui/core';
-import Camera from 'react-html5-camera-photo';
+    FormGroup, FormControl, InputLabel, Input, BottomNavigation,
+    BottomNavigationAction, DialogActions, Button } from '@material-ui/core';
 import { Close as CloseIcon, Save as SaveIcon, Image as ImageIcon, PhotoCamera as PhotoCameraIcon,
     Mic as MicIcon, Brush as BrushIcon } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { createWorker} from 'tesseract.js';
 
 import * as Transition from '../../Constants/transition';
+import Camera from '../Camera';
 
 const style = theme => ({
     appBar: {
@@ -18,15 +19,21 @@ const style = theme => ({
       marginLeft: theme.spacing(2),
       flex: 1,
     },
+    bottomNav: {
+        position: 'fixed',
+        bottom: 0,
+        width: '100%',
+    }
   });
 
 const worker = createWorker();
 
 function CreateNotes (props) {
     const { classes } = props;
-    const {handleSubmit, control } = useForm();
+    const { handleSubmit, control, getValues, setValue } = useForm();
     const fileInput = useRef(null);
     const [imgUpload, setImgUpload] = useState([]);
+    const [cameraMode, setCameraMode] = useState(false);
     const [imgToText, setImgToText] = useState('');
 
     const onSubmit = e => {
@@ -45,13 +52,6 @@ function CreateNotes (props) {
         doOCR();
     }, [imgUpload]);
 
-    const handleTakePhoto = data => {
-        var uploads = [];
-        uploads.push(data);
-        setImgToText('Translating to text...');
-        setImgUpload(uploads);
-    }
-
     const imageUpload = event => {
         if (event.target.files[0]) {
         var uploads = []
@@ -68,9 +68,16 @@ function CreateNotes (props) {
         }
     }
 
+    const formValues = getValues();
+
     return (
         <div>
-        <Dialog fullScreen open={props.show} onClose={props.close} TransitionComponent={Transition.SlideUpDialog}>
+        <Dialog
+            fullScreen open={props.show}
+            onClose={props.close} 
+            TransitionComponent={Transition.SlideUpDialog}
+            scroll="body"
+        >
             <AppBar className={classes.appBar}>
                 <Toolbar>
                     <IconButton edge="start" color="inherit" onClick={props.close} aria-label="close">
@@ -95,16 +102,24 @@ function CreateNotes (props) {
                     <FormGroup>
                         <FormControl>
                             <InputLabel>Content</InputLabel>
-                            <Input type="text" name="content" value={imgToText} multiline disableUnderline={true} />
+                            <Input
+                                type="text"
+                                name="content"
+                                value={formValues.content}
+                                onChange={e => setValue('content', e.target.value)}
+                                multiline disableUnderline={true}
+                            />
                         </FormControl>
                     </FormGroup>
                 </form>
             </DialogContent>
-            <Camera onTakePhoto={ data => handleTakePhoto(data)} />
+            { cameraMode && (
+                <Camera onCapture={blob => console.log(blob)} onClear={() => console.log('clear')}/>
+            )}
             <input type="file" onChange={e => imageUpload(e)} ref={fileInput} hidden/>
-            <BottomNavigation color="primary" showLabels>
+            <BottomNavigation color="primary" className={classes.bottomNav} showLabels>
                 <BottomNavigationAction icon={<ImageIcon />} onClick={() => fileInput.current.click()} />
-                <BottomNavigationAction icon={<PhotoCameraIcon />} />
+                <BottomNavigationAction icon={<PhotoCameraIcon />} onClick={() => setCameraMode(true)}/>
                 <BottomNavigationAction icon={<MicIcon />} />
                 <BottomNavigationAction icon={<BrushIcon />} />
             </BottomNavigation>
