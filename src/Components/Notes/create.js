@@ -1,13 +1,14 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
+import { useForm, Controller, FormProvider } from 'react-hook-form';
 import { DialogContent, Typography, Dialog, AppBar, Toolbar, IconButton,
     FormGroup, FormControl, InputLabel, Input, BottomNavigation,
     BottomNavigationAction, DialogActions, Button } from '@material-ui/core';
 import { Close as CloseIcon, Save as SaveIcon, Image as ImageIcon, PhotoCamera as PhotoCameraIcon,
-    Mic as MicIcon, Brush as BrushIcon } from '@material-ui/icons';
+    Mic as MicIcon, Brush as BrushIcon, NotesRounded } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 import { createWorker} from 'tesseract.js';
 
+import {  withAuthorization } from '../Session';
 import * as Transition from '../../Constants/transition';
 import Camera from '../Camera';
 
@@ -30,14 +31,22 @@ const worker = createWorker();
 
 function CreateNotes (props) {
     const { classes } = props;
-    const { handleSubmit, control, getValues, setValue } = useForm();
+    const { handleSubmit, control, getValues, setValue, register } = useForm();
     const fileInput = useRef(null);
     const [imgUpload, setImgUpload] = useState([]);
     const [cameraMode, setCameraMode] = useState(false);
     const [imgToText, setImgToText] = useState('');
+    const notesRef = props.firebase.getFirestore().collection('users').doc(props.uid).collection('notes');
+
 
     const onSubmit = e => {
-        console.log(e.data);
+        notesRef.add({
+            title: e.title,
+            content: e.content,
+            createdOn: new Date(),
+        });
+
+        props.close();
     }
 
     const doOCR = async() => {
@@ -45,12 +54,13 @@ function CreateNotes (props) {
         await worker.loadLanguage('eng');
         await worker.initialize('eng');
         const { data: { text } } = await worker.recognize(imgUpload[0]);
-        setImgToText(text);
+        setValue('content', text)
     }
 
     useEffect(() => {
         doOCR();
     }, [imgUpload]);
+
 
     const imageUpload = event => {
         if (event.target.files[0]) {
@@ -60,10 +70,10 @@ function CreateNotes (props) {
             let upload = event.target.files[key]
             uploads.push(URL.createObjectURL(upload))
         }
-            setImgToText('Translating to text...');
+            setValue('content', 'Translating to text...');
             setImgUpload(uploads);
         } else {
-            setImgToText('');
+            setValue('content', '');
             setImgUpload([]);
         }
     }
@@ -86,8 +96,8 @@ function CreateNotes (props) {
                     <Typography variant="h6" className={classes.dialogTitle}>
                         Add Notes
                     </Typography>
-                    <IconButton color="inherit" onClick={() => onSubmit(handleSubmit)}>
-                        <SaveIcon />
+                    <IconButton color="inherit">
+                        <SaveIcon onClick={handleSubmit((data) => onSubmit(data))}/>
                     </IconButton>
                 </Toolbar>
             </AppBar>
@@ -96,18 +106,28 @@ function CreateNotes (props) {
                     <FormGroup>
                         <FormControl>
                             <InputLabel>Title</InputLabel>
-                            <Input type="text" name="title" disableUnderline={true}/>
+                            <Controller
+                                as={<Input />}
+                                name="title"
+                                value={formValues.title}
+                                onChange={e => setValue('title', e.target.value)}
+                                control={control}
+                                disableUnderline
+                            />
                         </FormControl>
                     </FormGroup>
                     <FormGroup>
                         <FormControl>
                             <InputLabel>Content</InputLabel>
-                            <Input
-                                type="text"
+                            <Controller
+                                as={<Input/>}
                                 name="content"
+                                type="text"
+                                control={control}
                                 value={formValues.content}
                                 onChange={e => setValue('content', e.target.value)}
-                                multiline disableUnderline={true}
+                                multiline
+                                disableUnderline
                             />
                         </FormControl>
                     </FormGroup>
@@ -128,4 +148,5 @@ function CreateNotes (props) {
     )
 }
 
-export default withStyles(style)(CreateNotes);
+const condition = authUser => !!authUser;
+export default withAuthorization(condition)(withStyles(style)(CreateNotes));
