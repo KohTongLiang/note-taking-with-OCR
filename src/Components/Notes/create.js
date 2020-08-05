@@ -78,6 +78,14 @@ function CreateNotes (props) {
         }
     }
 
+    const imageTaken = blob => {
+        let uploads = []
+        uploads[0] = blob;
+        setImgUpload(uploads);
+        setCameraMode(false);
+        setValue('content', 'Translating to text...');
+    }
+
     const formValues = getValues();
 
     return (
@@ -101,6 +109,7 @@ function CreateNotes (props) {
                     </IconButton>
                 </Toolbar>
             </AppBar>
+            { !cameraMode && (
             <DialogContent>
                 <form>
                     <FormGroup>
@@ -133,8 +142,9 @@ function CreateNotes (props) {
                     </FormGroup>
                 </form>
             </DialogContent>
+            )}
             { cameraMode && (
-                <Camera onCapture={blob => console.log(blob)} onClear={() => console.log('clear')}/>
+                <Camera onCapture={blob => imageTaken(blob)} onClear={() => console.log('clear')}/>
             )}
             <input type="file" onChange={e => imageUpload(e)} ref={fileInput} hidden/>
             <BottomNavigation color="primary" className={classes.bottomNav} showLabels>
