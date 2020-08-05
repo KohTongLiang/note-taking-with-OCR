@@ -31,20 +31,27 @@ const worker = createWorker();
 
 function CreateNotes (props) {
     const { classes } = props;
-    const { handleSubmit, control, getValues, setValue, register } = useForm();
+    const { handleSubmit, control, getValues, setValue } = useForm();
     const fileInput = useRef(null);
     const [imgUpload, setImgUpload] = useState([]);
     const [cameraMode, setCameraMode] = useState(false);
-    const [imgToText, setImgToText] = useState('');
     const notesRef = props.firebase.getFirestore().collection('users').doc(props.uid).collection('notes');
 
 
     const onSubmit = e => {
-        notesRef.add({
-            title: e.title,
-            content: e.content,
-            createdOn: new Date(),
-        });
+        if (props.notesObj.id !== '') {
+            notesRef.doc(props.notesObj.id).set({
+                title: e.title,
+                content: e.content,
+                updatedOn: new Date(),
+            })
+        } else {
+            notesRef.add({
+                title: e.title,
+                content: e.content,
+                createdOn: new Date(),
+            });
+        }
 
         props.close();
     }
@@ -119,6 +126,7 @@ function CreateNotes (props) {
                                 as={<Input />}
                                 name="title"
                                 value={formValues.title}
+                                defaultValue={props.notesObj.title}
                                 onChange={e => setValue('title', e.target.value)}
                                 control={control}
                                 disableUnderline
@@ -134,6 +142,7 @@ function CreateNotes (props) {
                                 type="text"
                                 control={control}
                                 value={formValues.content}
+                                defaultValue={props.notesObj.content}
                                 onChange={e => setValue('content', e.target.value)}
                                 multiline
                                 disableUnderline

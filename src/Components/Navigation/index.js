@@ -63,7 +63,7 @@ const Navigation = () => {
     return (
         <div>
             <AuthUserContext.Consumer>
-                {authUser => <AppBar position="static">
+                {authUser => <AppBar position="fixed" className={classes.appBar}>
                     <Toolbar>
                         <IconButton onClick={toggleDrawer('left', true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
                         <MenuIcon />

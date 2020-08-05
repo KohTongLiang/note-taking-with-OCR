@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import {  withAuthorization } from '../Session';
 import { Container, Card, CardContent, CardActionArea, CardMedia, Typography,
-  CardActions, Button } from '@material-ui/core';
+  CardActions, Button, Paper, List } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const style = theme => ({
@@ -36,37 +36,37 @@ function Notes (props) {
         let notes = [];
         snapshot.forEach(e => {
           notes.push({
-            id : e.key,
+            id : e.id,
             title : e.data().title,
             content : e.data().content,
           })
         });
         setNoteList(notes);
       });
-    },[])
+    })
 
     return (
       <div>
-      <Container>
-        {noteList && noteList.map(e => (
-          <Card key={e.id} className={classes.cardRoot}>
-            <CardActionArea>
-              <CardContent>
-                <Typography variant="h5">
-                  {e.title}
-                </Typography>
-                <Typography variant="body1">
-                  {e.content}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small">Share</Button>
-              <Button size="small">Archive</Button>
-            </CardActions>
-          </Card>
-        ))}
-      </Container>
+        <Container>
+          {noteList && noteList.map(e => (
+            <Card key={e.id} className={classes.cardRoot}>
+              <CardActionArea onClick={() => props.editFormHandler(e)}>
+                <CardContent>
+                  <Typography variant="h5">
+                    {e.title}
+                  </Typography>
+                  <Typography variant="body1">
+                    {e.content}
+                  </Typography>
+                </CardContent>
+              </CardActionArea>
+              <CardActions>
+                <Button size="small">Share</Button>
+                <Button size="small">Archive</Button>
+              </CardActions>
+            </Card>
+          ))}
+        </Container>
       </div>
     )
 }

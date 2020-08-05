@@ -20,13 +20,32 @@ const style = theme => ({
 
 function Home (props) {
   const [createNotesShow, setCreateNotesShow] = useState(false);
+  const [notesObj, setNotesObj] = useState({
+    id: '',
+    title: '',
+    content: '',
+  });
   const {classes} = props;
+
+  const editFormHandler = noteObj => {
+    setCreateNotesShow(true);
+    setNotesObj(noteObj);
+  }
+
+  const handleClose = () => {
+    setNotesObj({
+      id: '',
+      title: '',
+      content: '',
+    });
+    setCreateNotesShow(false);
+  }
 
   return (
     <Box>
       <Container>
-        <Notes />
-        { createNotesShow && (<CreateNotes show={createNotesShow} close={() => setCreateNotesShow(false)}/>) }
+        <Notes editFormHandler={editFormHandler}/>
+        { createNotesShow && (<CreateNotes show={createNotesShow} notesObj={notesObj} close={handleClose}/>) }
       </Container>
 
       <Fab color="primary" onClick={() => setCreateNotesShow(!createNotesShow)} className={classes.fab} aria-label="add">
