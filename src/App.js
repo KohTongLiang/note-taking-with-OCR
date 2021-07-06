@@ -22,6 +22,11 @@ function App() {
       }),
     [prefersDarkMode],
   );
+  // const theme = createMuiTheme({
+  //   pallete: {
+  //     type: 'dark',
+  //   },
+  // });
 
   return (
     <ThemeProvider theme={theme}>
@@ -38,7 +43,7 @@ function App() {
         <Route path={ROUTES.TEST_OCR} component={OCRPage}/>
       </Router>
     </ThemeProvider>
-  ); 
+  );
 }
 
 export default withAuthentication(App);

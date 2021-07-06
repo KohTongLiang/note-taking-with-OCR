@@ -4,7 +4,7 @@ import { useForm, Controller } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 import { Container, Box, FormGroup, FormControl, Button,
     Input, InputLabel, FormHelperText, Snackbar, makeStyles,
-    Radio, RadioGroup, FormControlLabel, FormLabel, LinearProgress, Link } from '@material-ui/core';
+    Radio, RadioGroup, FormControlLabel, FormLabel, LinearProgress  } from '@material-ui/core';
 import * as ROUTES from '../../Constants/routes';
 
 const useStyles = makeStyles((theme) => ({
@@ -83,6 +83,7 @@ function SignUpPage (props) {
                                 <Controller as={RadioGroup} control={control} aria-label="gender" name="gender" rules={{required: true}}>
                                     <FormControlLabel value="female" control={<Radio />} label="Female" />
                                     <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                    <FormControlLabel value="other" control={<Radio />} label="Other" />
                                 </Controller>
                             <FormHelperText>{errors.gender && <span className={classes.errorText}>Please confirm your password is required</span>}</FormHelperText>
                         </FormControl>
@@ -91,9 +92,6 @@ function SignUpPage (props) {
                         <Button type="submit">
                             Sign Up
                         </Button>
-                    </FormGroup>
-                    <FormGroup>
-                        <p>Already have an account? Go to <Link to={ROUTES.SIGN_IN}>here</Link></p>
                     </FormGroup>
                 </form>
                 <Snackbar

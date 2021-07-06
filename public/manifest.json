@@ -1,6 +1,6 @@
 {
-  "short_name": "OCR Notes",
-  "name": "Simple OCR note taking application",
+  "short_name": "React App",
+  "name": "Create React App Sample",
   "icons": [
     {
       "src": "favicon.ico",

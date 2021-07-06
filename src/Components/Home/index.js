@@ -1,10 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Box, Fab } from '@material-ui/core';
 import { Create as CreateIcon } from '@material-ui/icons';
 
 import {  withAuthorization } from '../Session';
 import CreateNotes from '../Notes/create';
-import ViewNotes from '../Notes/view';
 import Notes from '../Notes';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -21,7 +20,6 @@ const style = theme => ({
 
 function Home (props) {
   const [createNotesShow, setCreateNotesShow] = useState(false);
-  const [viewNotesShow, setViewNotesShow] = useState(false);
   const [notesObj, setNotesObj] = useState({
     id: '',
     title: '',
@@ -34,12 +32,6 @@ function Home (props) {
     setNotesObj(noteObj);
   }
 
-  const viewFormHandler = noteObj => {
-    console.log(noteObj)
-    setViewNotesShow(true);
-    setNotesObj(noteObj);
-  }
-
   const handleClose = () => {
     setNotesObj({
       id: '',
@@ -47,16 +39,15 @@ function Home (props) {
       content: '',
     });
     setCreateNotesShow(false);
-    setViewNotesShow(false);
   }
 
   return (
     <Box>
       <Container>
-        <Notes editFormHandler={editFormHandler} viewFormHandler={viewFormHandler} />
+        <Notes editFormHandler={editFormHandler}/>
         { createNotesShow && (<CreateNotes show={createNotesShow} notesObj={notesObj} close={handleClose}/>) }
-        { viewNotesShow && (<ViewNotes show={viewNotesShow} notesObj={notesObj} close={handleClose} />)}
       </Container>
+
       <Fab color="primary" onClick={() => setCreateNotesShow(!createNotesShow)} className={classes.fab} aria-label="add">
           <CreateIcon />
       </Fab>
