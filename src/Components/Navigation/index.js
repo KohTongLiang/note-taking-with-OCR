@@ -1,10 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { AppBar, Toolbar, Typography, IconButton, Drawer, List,
-Divider, ListItem, ListItemIcon, ListItemText, makeStyles, Menu, MenuItem,
-SwipeableDrawer } from '@material-ui/core';
-import { Menu as MenuIcon, AccountCircle, Home as HomeIcon } from '@material-ui/icons';
+import { AppBar, Toolbar, Typography, IconButton, List,
+    Divider, ListItem, ListItemIcon, ListItemText, makeStyles, SwipeableDrawer, Container,
+    Button } from '@material-ui/core';
+import { Menu as MenuIcon, Home as HomeIcon } from '@material-ui/icons';
 
 import * as VALUES from '../../Constants/values';
 import * as ROUTES from '../../Constants/routes';
@@ -27,6 +27,14 @@ const useStyles = makeStyles((theme) => ({
     fullList: {
         width: 'auto',
     },
+    navFooter: {
+        position: 'fixed',
+        alignContent: 'center',
+        bottom: 0
+    },
+    links: {
+        textDecoration: 'none'
+    }
   }));
 
 const Navigation = () => { 
@@ -66,7 +74,7 @@ const Navigation = () => {
                 {authUser => <AppBar position="fixed" className={classes.appBar}>
                     <Toolbar>
                         <IconButton onClick={toggleDrawer('left', true)} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-                        <MenuIcon />
+                            <MenuIcon />
                         </IconButton>
                         <div>
                             <SwipeableDrawer onOpen={toggleDrawer('left', true)} anchor={'left'} 
@@ -82,12 +90,22 @@ const Navigation = () => {
                                         <ListItemIcon>
                                             <HomeIcon />
                                         </ListItemIcon>
-                                        <ListItemText>
-                                            <Link to={ROUTES.HOME}>Home</Link>
-                                        </ListItemText>
+                                        <Link className={classes.links} to={ROUTES.HOME}>
+                                            <ListItemText>
+                                                <Button>Home</Button>
+                                            </ListItemText>
+                                        </Link>
                                     </ListItem>
                                 </List>
                                 <Divider />
+
+                                {/* App Info */}
+                                <Container>
+                                    <Typography variant='p' className={classes.navFooter}>
+                                        Last Updated 06-07-2021
+                                    </Typography>
+                                </Container>
+
                             </div>
                             </SwipeableDrawer>
                         </div>
@@ -101,7 +119,7 @@ const Navigation = () => {
                             </div>
                         )}
 
-                        {!authUser && <Link to={ROUTES.SIGN_IN}>Sign In</Link>}
+                        {!authUser && <Link className={classes.links} to={ROUTES.SIGN_IN}><Button>Sign In</Button></Link>}
                         
                     </Toolbar>
                 </AppBar>}

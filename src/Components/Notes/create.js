@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useForm, Controller, FormProvider } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { DialogContent, Typography, Dialog, AppBar, Toolbar, IconButton,
     FormGroup, FormControl, InputLabel, Input, BottomNavigation,
-    BottomNavigationAction, DialogActions, Button } from '@material-ui/core';
-import { Close as CloseIcon, Save as SaveIcon, Image as ImageIcon, PhotoCamera as PhotoCameraIcon,
-    Mic as MicIcon, Brush as BrushIcon, NotesRounded } from '@material-ui/icons';
-    import * as Transition from '../../Constants/transition';
+    BottomNavigationAction, DialogActions, Snackbar } from '@material-ui/core';
+import { Close as CloseIcon, Save as SaveIcon, Image as ImageIcon, PhotoCamera as PhotoCameraIcon } from '@material-ui/icons';
+import * as Transition from '../../Constants/transition';
 import { withStyles } from '@material-ui/core/styles';
 import { createWorker} from 'tesseract.js';
 
@@ -14,17 +13,21 @@ import Camera from '../Camera';
 
 const style = theme => ({
     appBar: {
-      position: 'relative',
+       position: 'relative',
     },
     dialogTitle: {
       marginLeft: theme.spacing(2),
       flex: 1,
     },
     bottomNav: {
-        position: 'fixed',
-        bottom: 0,
-        width: '100%',
-    }
+        // position: 'fixed',
+        // bottom: 0,
+        // flex: 1
+        // width: '100%',
+    },
+    dialog: {
+        width: '100%'
+    },
   });
 
 const worker = createWorker();
@@ -35,8 +38,8 @@ function CreateNotes (props) {
     const fileInput = useRef(null);
     const [imgUpload, setImgUpload] = useState([]);
     const [cameraMode, setCameraMode] = useState(false);
+    const [inProgress, setInProgress] = useState(false);
     const notesRef = props.firebase.getFirestore().collection('users').doc(props.uid).collection('notes');
-
 
     const onSubmit = e => {
         if (props.notesObj.id !== '') {
@@ -77,10 +80,10 @@ function CreateNotes (props) {
             let upload = event.target.files[key]
             uploads.push(URL.createObjectURL(upload))
         }
-            setValue('content', 'Translating to text...');
+            setInProgress(true);
             setImgUpload(uploads);
         } else {
-            setValue('content', '');
+            setInProgress(false);
             setImgUpload([]);
         }
     }
@@ -90,7 +93,7 @@ function CreateNotes (props) {
         uploads[0] = blob;
         setImgUpload(uploads);
         setCameraMode(false);
-        setValue('content', 'Translating to text...');
+        setInProgress(true);
     }
 
     const formValues = getValues();
@@ -98,10 +101,13 @@ function CreateNotes (props) {
     return (
         <div>
         <Dialog
-            fullScreen open={props.show}
+            className={classes.dialog}
+            open={props.show}
             onClose={props.close} 
             TransitionComponent={Transition.SlideUpDialog}
             scroll="body"
+            maxWidth='md'
+            fullWidth={true}
         >
             <AppBar className={classes.appBar}>
                 <Toolbar>
@@ -150,17 +156,20 @@ function CreateNotes (props) {
                         </FormControl>
                     </FormGroup>
                 </form>
+                <input type="file" onChange={e => imageUpload(e)} ref={fileInput} hidden/>
+                <BottomNavigation color="primary" className={classes.bottomNav} showLabels>
+                    <BottomNavigationAction icon={<ImageIcon />} onClick={() => fileInput.current.click()} />
+                    <BottomNavigationAction icon={<PhotoCameraIcon />} onClick={() => setCameraMode(true)}/>
+                </BottomNavigation>
             </DialogContent>
             )}
             { cameraMode && (
                 <Camera onCapture={blob => imageTaken(blob)} onClear={() => console.log('clear')}/>
             )}
-            <input type="file" onChange={e => imageUpload(e)} ref={fileInput} hidden/>
-            <BottomNavigation color="primary" className={classes.bottomNav} showLabels>
-                <BottomNavigationAction icon={<ImageIcon />} onClick={() => fileInput.current.click()} />
-                <BottomNavigationAction icon={<PhotoCameraIcon />} onClick={() => setCameraMode(true)}/>
-            </BottomNavigation>
+            <DialogActions></DialogActions>
         </Dialog>
+
+        <Snackbar open={inProgress} autoHideDuration={6000} onClose={() => setInProgress(!inProgress)} message='Translating...' />
     </div>
     )
 }
