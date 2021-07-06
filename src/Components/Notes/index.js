@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react';
 
 import {  withAuthorization } from '../Session';
 import { Container, Card, CardContent, CardActionArea, CardMedia, Typography,
-  CardActions, Button, Paper, List } from '@material-ui/core';
+  CardActions, Button, Paper, List, IconButton } from '@material-ui/core';
+import { Delete as DeleteIcon } from '@material-ui/icons';
 import { withStyles } from '@material-ui/core/styles';
 
 const style = theme => ({
@@ -23,6 +24,9 @@ const style = theme => ({
     },
     cardMedia: {
       height: 140,
+    },
+    cardAction: {
+      flex: 1,
     }
 });
 
@@ -61,8 +65,11 @@ function Notes (props) {
                 </CardContent>
               </CardActionArea>
               <CardActions>
-                <Button size="small">Share</Button>
-                <Button size="small">Archive</Button>
+                <div className={classes.cardAction}>
+                  <Button size="small">Share</Button>
+                  <Button size="small">Archive</Button>
+                </div>
+                <IconButton><DeleteIcon/></IconButton>
               </CardActions>
             </Card>
           ))}

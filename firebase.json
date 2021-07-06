@@ -4,7 +4,8 @@
     "indexes": "firestore.indexes.json"
   },
   "hosting": {
-    "public": "public",
+    "target": "ocrnotes",
+    "public": "build",
     "ignore": [
       "firebase.json",
       "**/.*",

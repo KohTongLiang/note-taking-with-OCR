@@ -10,7 +10,7 @@ const config = {
     storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID,
     appId: process.env.REACT_APP_APPID,
-    measurementId: "G-KQ9JKCS904"
+    measurementId: "G-6JXQF764WW"
   };
 
 class Firebase {

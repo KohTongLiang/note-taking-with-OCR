@@ -5,11 +5,11 @@ import { DialogContent, Typography, Dialog, AppBar, Toolbar, IconButton,
     BottomNavigationAction, DialogActions, Button } from '@material-ui/core';
 import { Close as CloseIcon, Save as SaveIcon, Image as ImageIcon, PhotoCamera as PhotoCameraIcon,
     Mic as MicIcon, Brush as BrushIcon, NotesRounded } from '@material-ui/icons';
+    import * as Transition from '../../Constants/transition';
 import { withStyles } from '@material-ui/core/styles';
 import { createWorker} from 'tesseract.js';
 
 import {  withAuthorization } from '../Session';
-import * as Transition from '../../Constants/transition';
 import Camera from '../Camera';
 
 const style = theme => ({
@@ -159,8 +159,6 @@ function CreateNotes (props) {
             <BottomNavigation color="primary" className={classes.bottomNav} showLabels>
                 <BottomNavigationAction icon={<ImageIcon />} onClick={() => fileInput.current.click()} />
                 <BottomNavigationAction icon={<PhotoCameraIcon />} onClick={() => setCameraMode(true)}/>
-                <BottomNavigationAction icon={<MicIcon />} />
-                <BottomNavigationAction icon={<BrushIcon />} />
             </BottomNavigation>
         </Dialog>
     </div>

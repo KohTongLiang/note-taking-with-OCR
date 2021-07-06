@@ -86,16 +86,6 @@ const Navigation = () => {
                                             <Link to={ROUTES.HOME}>Home</Link>
                                         </ListItemText>
                                     </ListItem>
-                                    {authUser && (
-                                        <ListItem>
-                                            <ListItemIcon>
-                                                <HomeIcon />
-                                            </ListItemIcon>
-                                            <ListItemText>
-                                                <Link to={ROUTES.TEST_OCR}>Test OCR</Link>
-                                            </ListItemText>
-                                        </ListItem>
-                                    )}
                                 </List>
                                 <Divider />
                             </div>
@@ -107,39 +97,12 @@ const Navigation = () => {
                         
                         {authUser && (
                              <div>
-                                <IconButton
-                                aria-label="account of current user"
-                                aria-controls="menu-appbar"
-                                aria-haspopup="true"
-                                onClick={handleMenu}
-                                color="inherit"
-                                >
-                                    <AccountCircle />
-                                </IconButton>
-                                <Menu
-                                id="menu-appbar"
-                                anchorEl={anchorEl}
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                keepMounted
-                                transformOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                open={open}
-                                onClose={handleClose}
-                                >
-                                    <MenuItem onClick={handleClose}>Profile</MenuItem>
-                                    <MenuItem onClick={handleClose}>My account</MenuItem>
-                                    <MenuItem>
-                                        <SignOutButton/>
-                                    </MenuItem>
-                                </Menu>
+                                <SignOutButton/>
                             </div>
                         )}
+
                         {!authUser && <Link to={ROUTES.SIGN_IN}>Sign In</Link>}
+                        
                     </Toolbar>
                 </AppBar>}
             </AuthUserContext.Consumer>

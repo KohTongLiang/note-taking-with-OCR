@@ -1,5 +1,14 @@
 {
   "projects": {
-    "default": "reactfirebasetest-3b705"
+    "default": "cz2006-4bb77"
+  },
+  "targets": {
+    "cz2006-4bb77": {
+      "hosting": {
+        "ocrnotes": [
+          "ocrnotes"
+        ]
+      }
+    }
   }
 }
