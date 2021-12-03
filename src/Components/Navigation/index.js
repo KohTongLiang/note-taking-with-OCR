@@ -96,6 +96,11 @@ const Navigation = () => {
                                             </ListItemText>
                                         </Link>
                                     </ListItem>
+                                    <ListItem>
+                                        <ListItemIcon>
+                                            <HomeIcon />
+                                        </ListItemIcon>
+                                    </ListItem>
                                 </List>
                                 <Divider />
 
@@ -119,7 +124,9 @@ const Navigation = () => {
                             </div>
                         )}
 
-                        {!authUser && <Link className={classes.links} to={ROUTES.SIGN_IN}><Button>Sign In</Button></Link>}
+                        {!authUser && 
+                            <Link className={classes.links} to={ROUTES.SIGN_IN}><Button>Sign In</Button></Link>
+                        }
                         
                     </Toolbar>
                 </AppBar>}

@@ -26,3 +26,6 @@ yarn-error.log*
 firebase.json
 firebase.indexes.json
 firestore.rules
+
+package-lock.json
+yarn.lock

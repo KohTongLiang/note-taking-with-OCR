@@ -57,9 +57,7 @@ function Notes (props) {
 
     return (
       <div>
-        
         <Container>
-
           <div>
             <IconButton onClick={()=>setNoteView(0)}><ListIcon /></IconButton>
             <IconButton onClick={()=>setNoteView(1)}><ViewColumnIcon /></IconButton>
