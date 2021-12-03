@@ -27,7 +27,7 @@ function OCR(props) {
         if (!event.target.files.hasOwnProperty(key)) continue;
         let upload = event.target.files[key]
         u.push(URL.createObjectURL(upload))
-      }1
+      }
       setUploads(u);
     } else {
       setUploads([]);
