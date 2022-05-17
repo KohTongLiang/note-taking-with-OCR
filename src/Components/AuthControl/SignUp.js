@@ -4,8 +4,12 @@ import { useForm, Controller } from 'react-hook-form';
 import zxcvbn from 'zxcvbn';
 import { Container, Box, FormGroup, FormControl, Button,
     Input, InputLabel, FormHelperText, Snackbar, makeStyles,
-    Radio, RadioGroup, FormControlLabel, FormLabel, LinearProgress, Link } from '@material-ui/core';
+    Radio, RadioGroup, FormControlLabel, FormLabel, LinearProgress, Link,
+    Typography, CssBaseline, Avatar, Grid } from '@material-ui/core';
+import { LockOpen as LockOutlinedIcon } from '@material-ui/icons'
 import * as ROUTES from '../../Constants/routes';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+
 
 const useStyles = makeStyles((theme) => ({
         errorText: {
@@ -13,6 +17,21 @@ const useStyles = makeStyles((theme) => ({
         },
     })
 );
+
+const Copyright = props => {
+    return (
+      <Typography variant="body2" color="text.secondary" align="center" {...props}>
+        {'Copyright © '}
+        <Link color="inherit" href="https://mui.com/">
+          Your Website
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    );
+  }
+
+const theme = createTheme();
 
 function SignUpPage (props) {
     const {register, handleSubmit, control, errors } = useForm();
@@ -22,7 +41,6 @@ function SignUpPage (props) {
     const dbRef = props.firebase.getFirestore().collection('users');
     const [passwordStrength, setPasswordStrength] = useState(0);
     const passwordStrengthIndicator = ['very weak', 'weak', 'weak', 'medium', 'strong'];
-
 
     const onSubmit = data => {
         if (data.passwordOne === data.passwordTwo) {
@@ -38,28 +56,46 @@ function SignUpPage (props) {
             setOpen(true);
         }
     }
+    
     return (
-        <Container>
-            <h4>Sign Up</h4>
-            <Box>
-                <form onSubmit={handleSubmit(onSubmit)}>
-                    <FormGroup>
-                        <FormControl>
-                            <InputLabel>Username</InputLabel>
-                            <Input name="username" inputRef={register({ required: true })}/>
-                            <FormHelperText>Enter the name you wish to be known by.</FormHelperText>
-                            <FormHelperText>{errors.username && <span className={classes.errorText}>Username is required</span>}</FormHelperText>
-                        </FormControl>
-                    </FormGroup>
-                    <FormGroup>
+        <ThemeProvider >
+        <Container component="main" maxWidth="xs">
+            <CssBaseline />
+            <Box
+            sx={{
+                marginTop: 8,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+            }}
+            >
+            <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+                <LockOutlinedIcon />
+            </Avatar>
+            <Typography component="h1" variant="h5">
+                Sign up
+            </Typography>
+            <Box component="form" noValidate onSubmit={handleSubmit(onSubmit)} sx={{ mt: 3 }}>
+                <Grid container spacing={4}>
+                    <Grid item xs={12}>
+                        <FormGroup>
+                            <FormControl>
+                                <InputLabel>Username</InputLabel>
+                                <Input name="username" inputRef={register({ required: true })}/>
+                                <FormHelperText>Enter the name you wish to be known by.</FormHelperText>
+                                <FormHelperText>{errors.username && <span className={classes.errorText}>Username is required</span>}</FormHelperText>
+                            </FormControl>
+                        </FormGroup>
+                    </Grid>
+                    <Grid item xs={12}>
                         <FormControl>
                             <InputLabel>Email</InputLabel>
                             <Input name="email" inputRef={register({ required: true })}/>
                             <FormHelperText>Enter the email you wish to register your account with</FormHelperText>
                             <FormHelperText>{errors.email && <span className={classes.errorText}>Email is required</span>}</FormHelperText>
                         </FormControl>
-                    </FormGroup>
-                    <FormGroup>
+                    </Grid>
+                    <Grid item xs={12}>
                         <FormControl>
                             <InputLabel>Password</InputLabel>
                             <Input name="passwordOne" type="password" onChange={event => setPasswordStrength(zxcvbn(event.target.value))} inputRef={register({required: true})} />
@@ -69,33 +105,32 @@ function SignUpPage (props) {
                                 <FormHelperText>Password Strength: {passwordStrengthIndicator[(passwordStrength.score)]}</FormHelperText>
                             </div>
                         </FormControl>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormControl>
-                            <InputLabel>Confirm Password</InputLabel>
-                            <Input name="passwordTwo" type="password" inputRef={register({required: true})} />
-                            <FormHelperText>{errors.passwordTwo && <span className={classes.errorText}>Please confirm your password is required</span>}</FormHelperText>
-                        </FormControl>
-                    </FormGroup>
-                    <FormGroup>
-                        <FormControl>
-                            <FormLabel component="legend">Gender</FormLabel>
-                                <Controller as={RadioGroup} control={control} aria-label="gender" name="gender" rules={{required: true}}>
-                                    <FormControlLabel value="female" control={<Radio />} label="Female" />
-                                    <FormControlLabel value="male" control={<Radio />} label="Male" />
-                                </Controller>
-                            <FormHelperText>{errors.gender && <span className={classes.errorText}>Please confirm your password is required</span>}</FormHelperText>
-                        </FormControl>
-                    </FormGroup>
-                    <FormGroup>
-                        <Button type="submit">
-                            Sign Up
-                        </Button>
-                    </FormGroup>
+                    </Grid>
+                    <Grid item xs={12}>
+                        <FormGroup>
+                            <FormControl>
+                                <InputLabel>Confirm Password</InputLabel>
+                                <Input name="passwordTwo" type="password" inputRef={register({required: true})} />
+                                <FormHelperText>{errors.passwordTwo && <span className={classes.errorText}>Please confirm your password is required</span>}</FormHelperText>
+                            </FormControl>
+                        </FormGroup>
+                    </Grid>
+                </Grid>
+                <Button
+                    type="submit"
+                    fullWidth
+                    variant="contained"
+                    sx={{ mt: 3, mb: 2 }}
+                >
+                Sign Up
+                </Button>
+                <Grid container justifyContent="flex-end">
+                <Grid item>
                     <FormGroup>
                         <p>Already have an account? Go to <Link to={ROUTES.SIGN_IN}>here</Link></p>
                     </FormGroup>
-                </form>
+                </Grid>
+                </Grid>
                 <Snackbar
                     open={open} color='red' autoHideDuration={600} message={authError} action={
                         <Button color="inherit" size="small" onClick={() => setOpen(false)}>
@@ -104,7 +139,10 @@ function SignUpPage (props) {
                     }
                 />
             </Box>
+            </Box>
+            <Copyright sx={{ mt: 5 }} />
         </Container>
+        </ThemeProvider>
     )
 }
 
